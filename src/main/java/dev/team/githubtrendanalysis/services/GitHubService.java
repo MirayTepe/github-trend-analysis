@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.Future;
 
 @Service
 public class GitHubService {
@@ -27,29 +27,49 @@ public class GitHubService {
     @Value("${github.api.token}")
     private String githubApiToken;
 
-    public void fetchDataAndSaveToNeo4j() {
+    private static final int TOTAL_PAGES = 10; // Toplam sayfa sayısı, ihtiyaca göre değiştirilebilir
+
+    public Future<Void> fetchAllDataAndSaveToNeo4j() throws InterruptedException {
+        for (int page = 1; page <= TOTAL_PAGES; page++) {
+            GitHubSearchRequest request = createGitHubSearchRequest(page);
+
+            RepositoryResult result = fetchDataFromGitHub(request);
+
+            if (result != null && result.getItems() != null) {
+                List<Repository> repositories = result.getItems();
+                repositoryRepository.saveAll(repositories);
+
+                // Küçük bir gecikme ekleyerek GitHub API sınırlamalarına uymaya çalışıyoruz
+                Thread.sleep(1000);
+            }
+        }
+        return null;
+    }
+
+    private GitHubSearchRequest createGitHubSearchRequest(int page) {
         GitHubSearchRequest request = new GitHubSearchRequest();
         request.setQuery("created:>2022-01-01");
         request.setSortType("stars");
         request.setSortOrder("desc");
+        request.setPage(page);
 
+        return request;
+    }
+
+    private RepositoryResult fetchDataFromGitHub(GitHubSearchRequest request) {
         WebClient webClient = webClientBuilder.baseUrl(baseUrl)
-                .defaultHeader("Authorization", githubApiToken)  // Authorization başlığını ekliyoruz
+                .defaultHeader("Authorization", githubApiToken)
                 .build();
 
-        RepositoryResult result = webClient.get()
+        return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("q", request.getQuery())
                         .queryParam("sort", request.getSortType())
                         .queryParam("order", request.getSortOrder())
+                        .queryParam("page", request.getPage())
                         .build())
                 .retrieve()
                 .bodyToMono(RepositoryResult.class)
                 .block();
-
-        if (result != null && result.getItems() != null) {
-            List<Repository> first20Items = result.getItems().stream().limit(20).collect(Collectors.toList());
-            repositoryRepository.saveAll(first20Items);
-        }
     }
 }

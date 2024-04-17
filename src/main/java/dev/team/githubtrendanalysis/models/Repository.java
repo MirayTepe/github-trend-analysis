@@ -34,6 +34,8 @@ public class Repository {
     @Relationship(type = "HAS_LICENSE", direction = Relationship.Direction.OUTGOING)
     private License license;
 
+
+
     private String html_url;
 
     private String description;
@@ -132,7 +134,8 @@ public class Repository {
 
     private Integer watchers_count;
 
-    private String language;
+    @Relationship(type = "WRITTEN_IN", direction = Relationship.Direction.OUTGOING)
+    private Language language;
 
     private Boolean has_issues;
 
