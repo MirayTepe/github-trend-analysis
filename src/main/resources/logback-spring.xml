@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Temel log dosya yolu -->
+    <property name="LOG_PATH" value="logs/" />
+
+    <!-- Günlük dosya adı formatı -->
+    <property name="LOG_FILE_PATTERN" value="%d{yyyy-MM-dd}/%d{yyyy-MM-dd}-%logger{10}.log" />
+
+    <!-- Root logger ayarı -->
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+    </root>
+
+    <!-- Her gün için ayrı dosya oluşturma ayarı -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}${LOG_FILE_PATTERN}</file>
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Dosya isimlerini gün bazında değiştir -->
+            <fileNamePattern>${LOG_PATH}${LOG_FILE_PATTERN}</fileNamePattern>
+            <!-- Dosyaların maksimum yaşam süresi -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+</configuration>
