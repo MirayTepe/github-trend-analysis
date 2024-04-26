@@ -2,7 +2,6 @@ package dev.team.githubtrendanalysis.models;
 
 import dev.team.githubtrendanalysis.objects.Owner;
 import lombok.*;
-import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -15,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Repository {
+public class GithubRepo {
 
     @Id
     private Long id;

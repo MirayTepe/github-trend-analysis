@@ -4,7 +4,6 @@ import lombok.*;
 
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Relationship;
-import org.neo4j.ogm.annotation.typeconversion.Convert;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
@@ -66,5 +65,5 @@ public class License {
     private boolean featured;
 
     @Relationship(type = "HAS_LICENSE", direction = Relationship.Direction.INCOMING)
-    private List<Repository> repositories;
+    private List<GithubRepo> repositories;
 }

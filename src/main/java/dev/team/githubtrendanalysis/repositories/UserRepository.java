@@ -1,5 +1,6 @@
 package dev.team.githubtrendanalysis.repositories;
 
+
 import dev.team.githubtrendanalysis.models.User;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 

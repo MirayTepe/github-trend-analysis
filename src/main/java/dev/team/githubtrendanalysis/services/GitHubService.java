@@ -1,14 +1,24 @@
 package dev.team.githubtrendanalysis.services;
 
-import dev.team.githubtrendanalysis.models.Repository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.team.githubtrendanalysis.models.GithubRepo;
 import dev.team.githubtrendanalysis.queryresults.RepositoryResult;
-import dev.team.githubtrendanalysis.repositories.RepositoryRepository;
+import dev.team.githubtrendanalysis.repositories.GithubRepoRepository;
 import dev.team.githubtrendanalysis.requests.GitHubSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -19,36 +29,47 @@ public class GitHubService {
     private WebClient.Builder webClientBuilder;
 
     @Autowired
-    private RepositoryRepository repositoryRepository;
+    private GithubRepoRepository githubRepoRepository;
 
     @Value("${http.client.base-url}")
     private String baseUrl;
 
     @Value("${github.api.token}")
     private String githubApiToken;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    private static final int TOTAL_PAGES = 10; // Toplam sayfa sayısı, ihtiyaca göre değiştirilebilir
+    private static final int TOTAL_PAGES = 10;
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public Future<Void> fetchAllDataAndSaveToNeo4j() throws InterruptedException {
-        for (int page = 1; page <= TOTAL_PAGES; page++) {
-            GitHubSearchRequest request = createGitHubSearchRequest(page);
 
-            RepositoryResult result = fetchDataFromGitHub(request);
 
-            if (result != null && result.getItems() != null) {
-                List<Repository> repositories = result.getItems();
-                repositoryRepository.saveAll(repositories);
 
-                // Küçük bir gecikme ekleyerek GitHub API sınırlamalarına uymaya çalışıyoruz
-                Thread.sleep(1000);
+    public Future<Void> fetchAllDataAndSaveToNeo4j(LocalDate startDate, LocalDate endDate) throws InterruptedException {
+        LocalDate currentDate = startDate;
+
+        while (currentDate.isBefore(endDate) || currentDate.isEqual(endDate)) {
+            for (int page = 1; page <= TOTAL_PAGES; page++) {
+                GitHubSearchRequest request = createGitHubSearchRequest(currentDate, page);
+
+                RepositoryResult result = fetchDataFromGitHub(request);
+
+                if (result != null && result.getItems() != null) {
+                    List<GithubRepo> repositories = result.getItems();
+                    githubRepoRepository.saveAll(repositories);
+
+                    // GitHub API sınırlamalarına uymak için gecikme
+                    Thread.sleep(1000);
+                }
             }
+            currentDate = currentDate.plusDays(1);
         }
         return null;
     }
 
-    private GitHubSearchRequest createGitHubSearchRequest(int page) {
+    private GitHubSearchRequest createGitHubSearchRequest(LocalDate date, int page) {
         GitHubSearchRequest request = new GitHubSearchRequest();
-        request.setQuery("created:>2022-01-01");
+        request.setQuery("created:" + date.format(dateFormatter));
         request.setSortType("stars");
         request.setSortOrder("desc");
         request.setPage(page);
@@ -72,4 +93,22 @@ public class GitHubService {
                 .bodyToMono(RepositoryResult.class)
                 .block();
     }
+
+
+    public Page<GithubRepo> getAllGithubRepos(Pageable pageable) {
+        return githubRepoRepository.findAll(pageable);
+    }
+    public List<GithubRepo> getFilteredRepos(LocalDate startDate, LocalDate endDate) {
+        return githubRepoRepository.findByCreatedAtBetween(startDate.toString(), endDate.toString());
+    }
+
+    public List<GithubRepo> getBatchRepos(int batchSize) {
+        Pageable pageable = PageRequest.of(0, batchSize);
+        return githubRepoRepository.findAll(pageable).getContent();
+    }
+
+
+
+
+
 }
