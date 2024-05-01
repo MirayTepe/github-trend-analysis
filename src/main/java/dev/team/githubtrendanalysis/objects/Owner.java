@@ -4,6 +4,7 @@ package dev.team.githubtrendanalysis.objects;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.neo4j.ogm.annotation.Index;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
@@ -14,6 +15,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 public class Owner {
 
     @Id
+    @Index(unique = true)
     private Long id;
 
     private String login;

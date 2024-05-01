@@ -39,9 +39,8 @@ public class GitHubService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final int TOTAL_PAGES = 10;
+    private static final int TOTAL_PAGES = 3;
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
 
 
 
@@ -51,14 +50,11 @@ public class GitHubService {
         while (currentDate.isBefore(endDate) || currentDate.isEqual(endDate)) {
             for (int page = 1; page <= TOTAL_PAGES; page++) {
                 GitHubSearchRequest request = createGitHubSearchRequest(currentDate, page);
-
                 RepositoryResult result = fetchDataFromGitHub(request);
 
                 if (result != null && result.getItems() != null) {
                     List<GithubRepo> repositories = result.getItems();
                     githubRepoRepository.saveAll(repositories);
-
-                    // GitHub API sınırlamalarına uymak için gecikme
                     Thread.sleep(1000);
                 }
             }
@@ -95,8 +91,9 @@ public class GitHubService {
     }
 
 
-    public Page<GithubRepo> getAllGithubRepos(Pageable pageable) {
-        return githubRepoRepository.findAll(pageable);
+    public List<GithubRepo> getGithubReposByPageAndSize(int page, int size) {
+        int skip = page * size;
+        return githubRepoRepository.findGithubReposByPageAndSize(skip, size);
     }
     public List<GithubRepo> getFilteredRepos(LocalDate startDate, LocalDate endDate) {
         return githubRepoRepository.findByCreatedAtBetween(startDate.toString(), endDate.toString());

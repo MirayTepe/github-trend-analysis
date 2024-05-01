@@ -3,6 +3,7 @@ package dev.team.githubtrendanalysis.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.*;
+import org.neo4j.ogm.annotation.Index;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
@@ -13,6 +14,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 public class Language {
 
     @Id
+    @Index(unique = true)
     private String name;
 
     // Getter ve setter metotları

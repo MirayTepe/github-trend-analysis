@@ -3,6 +3,7 @@ package dev.team.githubtrendanalysis.models;
 import lombok.*;
 
 import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -20,6 +21,7 @@ public class License {
 
     @Id
     @GeneratedValue
+    @Index(unique = true)
     private Long id;
 
     @Property(name = "key")
