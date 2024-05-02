@@ -21,7 +21,8 @@ public interface GithubRepoRepository extends Neo4jRepository<GithubRepo, Long> 
     List<GithubRepo> findByLanguageName(String languageName);
 
     // Fork sayısı belirli bir değerden fazla olan repoları getirme
-    List<GithubRepo> findByForksCountGreaterThan(int forks);
+    List<GithubRepo> findByForksCountGreaterThan(Integer forksCount); // Değişiklik burada
+
 
     // Özel sorgu: Belirli bir lisansa sahip repoları getirme
     @Query("MATCH (r:GithubRepo)-[:HAS_LICENSE]->(l:License) WHERE l.name = $licenseName RETURN r")

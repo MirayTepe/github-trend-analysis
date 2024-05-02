@@ -51,7 +51,8 @@ public class GithubRepo {
 
     private Integer size;
 
-    private Integer stargazers_count;
+    @Property(name = "stargazers_count")
+    private Integer stargazersCount;
 
     private Integer watchers_count;
 
@@ -70,7 +71,8 @@ public class GithubRepo {
 
     private Boolean has_discussions;
 
-    private Integer forks_count;
+    @Property(name = "forks_count")
+    private Integer forksCount;
 
     private Boolean archived;
 

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface LanguageRepository extends Neo4jRepository<Language, String> {
 
     // Dile göre repo sayısını getirme
-    @Query("MATCH (l:Language)<-[:WRITTEN_IN]-(r:GithubRepo) WHERE l.name = $languageName RETURN count(r)")
+    @Query("MATCH (l:Language)<-[:WRITTEN_IN]-(r:GithubRepo) WHERE l.name = $name RETURN count(r)")
     int countRepositoriesByLanguage(String languageName);
 }
