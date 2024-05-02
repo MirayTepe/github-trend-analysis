@@ -103,6 +103,21 @@ public class GitHubService {
         Pageable pageable = PageRequest.of(0, batchSize);
         return githubRepoRepository.findAll(pageable).getContent();
     }
+    public List<GithubRepo> getTop10StarredRepositories() {
+        return githubRepoRepository.findTop10ByOrderByStargazersCountDesc();
+    }
+
+    public List<GithubRepo> getRepositoriesByLanguage(String languageName) {
+        return githubRepoRepository.findByLanguageName(languageName);
+    }
+
+    public List<GithubRepo> getRepositoriesByForksCount(int minimumForks) {
+        return githubRepoRepository.findByForksCountGreaterThan(minimumForks);
+    }
+
+    public List<GithubRepo> getRepositoriesByLicenseName(String licenseName) {
+        return githubRepoRepository.findByLicenseName(licenseName);
+    }
 
 
 

@@ -13,4 +13,17 @@ public interface GithubRepoRepository extends Neo4jRepository<GithubRepo, Long> 
     List<GithubRepo> findByCreatedAtBetween(String startDate, String endDate);
     @Query("MATCH (repo:GithubRepo) RETURN repo SKIP $skip LIMIT $size")
     List<GithubRepo> findGithubReposByPageAndSize(int skip, int size);
+
+    // En çok yıldız alan repoları bulma
+    List<GithubRepo> findTop10ByOrderByStargazersCountDesc();
+
+    // Belirli bir dilde yazılmış repoları bulma
+    List<GithubRepo> findByLanguageName(String languageName);
+
+    // Fork sayısı belirli bir değerden fazla olan repoları getirme
+    List<GithubRepo> findByForksCountGreaterThan(int forks);
+
+    // Özel sorgu: Belirli bir lisansa sahip repoları getirme
+    @Query("MATCH (r:GithubRepo)-[:HAS_LICENSE]->(l:License) WHERE l.name = $licenseName RETURN r")
+    List<GithubRepo> findByLicenseName(String licenseName);
 }
