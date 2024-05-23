@@ -1,19 +1,21 @@
 package dev.team.githubtrendanalysis.models;
-import org.neo4j.ogm.annotation.Index;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.Relationship;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
+import java.util.ArrayList;
 import java.util.List;
 
-
-@Node("License")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Node("License")
 public class License {
     @Id
     @GeneratedValue
@@ -32,4 +34,9 @@ public class License {
     private List<String> limitations;
     private String body;
     private boolean featured;
+    public License(String name) {
+        this.name = name;
+    }
+
+
 }

@@ -1,33 +1,36 @@
 package dev.team.githubtrendanalysis.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.team.githubtrendanalysis.models.GithubRepo;
-import dev.team.githubtrendanalysis.repositories.GithubRepoRepository;
 import dev.team.githubtrendanalysis.queryresults.RepositoryResult;
+import dev.team.githubtrendanalysis.repositories.GithubRepoRepository;
 import dev.team.githubtrendanalysis.requests.GitHubSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 @Service
 public class GitHubService {
 
     @Autowired
+    private GithubRepoRepository gitHubRepoRepository;
+
+    @Autowired
     private WebClient.Builder webClientBuilder;
 
     @Autowired
-    private GithubRepoRepository githubRepoRepository;
+    private GithubRepoService githubRepoService;
 
     @Value("${http.client.base-url}")
     private String baseUrl;
@@ -35,12 +38,11 @@ public class GitHubService {
     @Value("${github.api.token}")
     private String githubApiToken;
 
-    private static final int TOTAL_PAGES = 10;
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    public GitHubService(GithubRepoRepository githubRepoRepository) {
-        this.githubRepoRepository = githubRepoRepository;
-    }
+    private static final int TOTAL_PAGES = 3;
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public Future<Void> fetchAllDataAndSaveToNeo4j(LocalDate startDate, LocalDate endDate) throws InterruptedException {
         LocalDate currentDate = startDate;
@@ -52,7 +54,9 @@ public class GitHubService {
 
                 if (result != null && result.getItems() != null) {
                     List<GithubRepo> repositories = result.getItems();
-                    githubRepoRepository.saveAll(repositories);
+                    for (GithubRepo repo : repositories) {
+                        githubRepoService.saveGithubRepo(repo);
+                    }
                     Thread.sleep(1000);
                 }
             }
@@ -89,100 +93,97 @@ public class GitHubService {
     }
 
     public Page<GithubRepo> findGithubReposByFullName(String fullName, Pageable pageable) {
-        return githubRepoRepository.findPageByFullName(fullName, pageable);
+        return gitHubRepoRepository.findPageByFullName(fullName, pageable);
     }
+
     public List<GithubRepo> getAllGithubRepos() {
-        return githubRepoRepository.findAll();
+        return gitHubRepoRepository.findAll();
     }
 
     public Optional<GithubRepo> getGithubRepoById(Long id) {
-        return githubRepoRepository.findById(id);
+        return gitHubRepoRepository.findById(id);
     }
 
-
     public List<GithubRepo> getGithubReposByFork(boolean isFork) {
-        return githubRepoRepository.findByFork(isFork);
+        return gitHubRepoRepository.findByFork(isFork);
     }
 
     public List<GithubRepo> getGithubReposByArchived(boolean isArchived) {
-        return githubRepoRepository.findByArchived(isArchived);
+        return gitHubRepoRepository.findByArchived(isArchived);
     }
 
     public List<GithubRepo> getGithubReposByPrivate(boolean isPrivate) {
-        return githubRepoRepository.findByIsPrivate(isPrivate);
+        return gitHubRepoRepository.findByIsPrivate(isPrivate);
     }
 
     public List<GithubRepo> getGithubReposByDescriptionContaining(String keyword) {
-        return githubRepoRepository.findByDescriptionContaining(keyword);
+        return gitHubRepoRepository.findByDescriptionContaining(keyword);
     }
 
-
     public List<GithubRepo> getGithubReposBySizeGreaterThan(int size) {
-        return githubRepoRepository.findBySizeGreaterThanEqual(size);
+        return gitHubRepoRepository.findBySizeGreaterThanEqual(size);
     }
 
     public List<GithubRepo> getGithubReposByStargazersCountGreaterThan(int count) {
-        return githubRepoRepository.findByStargazersCountGreaterThanEqual(count);
+        return gitHubRepoRepository.findByStargazersCountGreaterThanEqual(count);
     }
 
     public List<GithubRepo> getGithubReposByWatchersCountGreaterThan(int count) {
-        return githubRepoRepository.findByWatchersCountGreaterThanEqual(count);
+        return gitHubRepoRepository.findByWatchersCountGreaterThanEqual(count);
     }
 
     public List<GithubRepo> getGithubReposByOpenIssuesCountGreaterThan(int count) {
-        return githubRepoRepository.findByOpenIssuesCountGreaterThanEqual(count);
+        return gitHubRepoRepository.findByOpenIssuesCountGreaterThanEqual(count);
     }
 
     public List<GithubRepo> getGithubReposByDefaultBranch(String branch) {
-        return githubRepoRepository.findByDefaultBranch(branch);
+        return gitHubRepoRepository.findByDefaultBranch(branch);
     }
 
     public List<GithubRepo> getGithubReposByVisibility(String visibility) {
-        return githubRepoRepository.findByVisibility(visibility);
+        return gitHubRepoRepository.findByVisibility(visibility);
     }
 
     public List<GithubRepo> getGithubReposByCreatedAt(String createdAt) {
-        return githubRepoRepository.findByCreatedAt(createdAt);
+        return gitHubRepoRepository.findByCreatedAt(createdAt);
     }
 
     public List<GithubRepo> getGithubReposByUpdatedAt(String updatedAt) {
-        return githubRepoRepository.findByUpdatedAt(updatedAt);
+        return gitHubRepoRepository.findByUpdatedAt(updatedAt);
     }
 
     public List<GithubRepo> getGithubReposByPushedAt(String pushedAt) {
-        return githubRepoRepository.findByPushedAt(pushedAt);
+        return gitHubRepoRepository.findByPushedAt(pushedAt);
     }
 
     public List<GithubRepo> getGithubReposByWebCommitSignoffRequired(boolean required) {
-        return githubRepoRepository.findByWebCommitSignoffRequired(required);
+        return gitHubRepoRepository.findByWebCommitSignoffRequired(required);
     }
 
     public List<GithubRepo> getGithubReposByIsTemplate(boolean isTemplate) {
-        return githubRepoRepository.findByIsTemplate(isTemplate);
+        return gitHubRepoRepository.findByIsTemplate(isTemplate);
     }
 
-    // Veritabanına ekleme işlevleri
-    // Diğer sorgu işlevleriyle entegre edilebilir
-
     public GithubRepo saveGithubRepo(GithubRepo githubRepo) {
-        return githubRepoRepository.save(githubRepo);
+        return githubRepoService.saveGithubRepo(githubRepo);
     }
 
     public List<GithubRepo> saveAllGithubRepos(List<GithubRepo> githubRepos) {
-        return githubRepoRepository.saveAll(githubRepos);
+        return gitHubRepoRepository.saveAll(githubRepos);
     }
 
     public void deleteGithubRepoById(Long id) {
-        githubRepoRepository.deleteById(id);
+        gitHubRepoRepository.deleteById(id);
     }
 
     public List<GithubRepo> getFilteredRepos(LocalDate startDate, LocalDate endDate) {
-        return githubRepoRepository.findByCreatedAtBetween(startDate.toString(), endDate.toString());
+        return gitHubRepoRepository.findByCreatedAtBetween(startDate.toString(), endDate.toString());
     }
+
     public Map<String, Object> getGithubReposByPageAndSize(int page, int size) {
         int skip = page * size;
-        List<GithubRepo> repos = githubRepoRepository.findGithubReposByPageAndSize(skip, size);
-        long totalCount = githubRepoRepository.count(); // Assuming this method exists to count total repositories
+        List<GithubRepo> repos = gitHubRepoRepository.findGithubReposByPageAndSize(skip, size);
+        long totalCount = gitHubRepoRepository.count();
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
         Map<String, Object> response = new HashMap<>();
@@ -197,15 +198,11 @@ public class GitHubService {
                                                List<String> licenseNames, List<String> topics,
                                                int page, int size) {
         int skip = page * size;
-        return githubRepoRepository.searchGithubReposByPageAndSize(query, filterBy, isPrivate, fork,
+        return gitHubRepoRepository.searchGithubReposByPageAndSize(query, filterBy, isPrivate, fork,
                 languageNames, ownerLogins, licenseNames, topics, skip, size);
     }
 
-
-
     public List<GithubRepo> findTop10ByOrderByStargazersCountDesc() {
-        return githubRepoRepository.findTop10ByOrderByStargazersCountDesc();
+        return gitHubRepoRepository.findTop10ByOrderByStargazersCountDesc();
     }
-
-
 }

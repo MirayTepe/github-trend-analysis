@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 import org.neo4j.ogm.annotation.Index;
 import org.springframework.data.neo4j.core.schema.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -46,7 +48,6 @@ public class GithubRepo {
     private String git_url;
 
     private Integer size;
-
 
     private Integer stargazers_count;
 
@@ -90,17 +91,20 @@ public class GithubRepo {
     private Integer watchers;
 
     private String default_branch;
+    private String forks_url;
 
     private Double score;
 
     @Relationship(type = "HAS_TOPIC")
     private List<TopicNode> topics;
 
+
     private String created_at;
 
     private String updated_at;
 
     private String pushed_at;
+
 
 
 }

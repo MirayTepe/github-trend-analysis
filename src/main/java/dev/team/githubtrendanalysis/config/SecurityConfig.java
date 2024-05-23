@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +20,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     private final NeoUserDetailsService neoUserDetailsService;
 
     public SecurityConfig(NeoUserDetailsService neoUserDetailsService) {
@@ -28,18 +28,20 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
+        return httpSecurity
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/me", "/api/v1/enrollments/**").authenticated()
+                        .requestMatchers(
+                                "/api/v1/auth/me",
+                                "/api/v1/enrollments/**"
+                        ).authenticated()
                         .anyRequest().permitAll()
                 )
                 .userDetailsService(neoUserDetailsService)
-                .httpBasic(Customizer.withDefaults());
-
-        return httpSecurity.build();
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
 
     @Bean

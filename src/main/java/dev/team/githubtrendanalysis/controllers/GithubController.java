@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,11 +27,13 @@ public class GithubController {
     public ResponseEntity<String> fetchAndSaveData(
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate
+
     ) {
         try {
-            gitHubService.fetchAllDataAndSaveToNeo4j(startDate, endDate);
+
+            gitHubService.fetchAllDataAndSaveToNeo4j(startDate, endDate); // Call the correct method
             return ResponseEntity.ok("Veriler başarıyla çekildi ve Neo4j'e kaydedildi.");
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bir hata oluştu: " + e.getMessage());
         }
     }
@@ -89,12 +90,10 @@ public class GithubController {
         return new ResponseEntity<>(repositories, HttpStatus.OK);
     }
 
-
     @GetMapping("/top10stargazers")
     public List<GithubRepo> getTop10ByStargazersCountDesc() {
         return gitHubService.findTop10ByOrderByStargazersCountDesc();
     }
-
 
     @GetMapping("/forks")
     public List<GithubRepo> getReposByFork(@RequestParam boolean isFork) {
@@ -115,7 +114,6 @@ public class GithubController {
     public List<GithubRepo> getReposByDescriptionContaining(@RequestParam String keyword) {
         return gitHubService.getGithubReposByDescriptionContaining(keyword);
     }
-
 
     @GetMapping("/size")
     public List<GithubRepo> getReposBySizeGreaterThan(@RequestParam int size) {
@@ -171,8 +169,6 @@ public class GithubController {
     public List<GithubRepo> getReposByIsTemplate(@RequestParam boolean isTemplate) {
         return gitHubService.getGithubReposByIsTemplate(isTemplate);
     }
-
-
 
     @PostMapping("/repo")
     public ResponseEntity<GithubRepo> saveRepo(@RequestBody GithubRepo githubRepo) {

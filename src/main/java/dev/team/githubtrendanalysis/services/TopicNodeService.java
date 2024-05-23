@@ -15,17 +15,12 @@ public class TopicNodeService {
     @Autowired
     private TopicNodeRepository topicRepository;
 
-    public Map<String, Long> getRepoCountByTopic() {
-        List<TopicRepoCount> topicDataList = topicRepository.countReposByTopic();
-        return groupByTopic(topicDataList);
+    public int countRepositoriesByTopic(String topic) {
+        return topicRepository.countRepositoriesByTopic(topic);
     }
 
-    private Map<String, Long> groupByTopic(List<TopicRepoCount> topicDataList) {
-        Map<String, Long> topicMap = new HashMap<>();
-        for (TopicRepoCount topicData : topicDataList) {
-            topicMap.put(topicData.getTopic(), topicData.getRepoCount());
-        }
-        return topicMap;
+    public List<TopicRepoCount> getRepoCountByTopic() {
+        return topicRepository.countReposByTopic();
     }
 
     public List<GithubRepo> getGithubReposByTopic(String topic) {

@@ -10,21 +10,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Arrays;
 import java.util.Collection;
 
+import java.util.*;
+
 @Node
 public class User implements UserDetails {
-
-    @Id
+    @Id @GeneratedValue
     private Long id;
-
     private String name;
-
     private String username;
-
     private String password;
-
     private String roles;
 
-    public User() {}
+    public User() {
+    }
 
     public Long getId() {
         return id;

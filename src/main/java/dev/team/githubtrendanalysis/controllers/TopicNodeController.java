@@ -1,6 +1,8 @@
 package dev.team.githubtrendanalysis.controllers;
 
 import dev.team.githubtrendanalysis.models.GithubRepo;
+import dev.team.githubtrendanalysis.models.LanguageRepoCount;
+import dev.team.githubtrendanalysis.models.TopicRepoCount;
 import dev.team.githubtrendanalysis.services.TopicNodeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +23,7 @@ public class TopicNodeController {
     }
 
     @GetMapping("/count-by-topic")
-    public Map<String, Long> getRepoCountByTopic() {
+    public List<TopicRepoCount> getRepoCountByTopic() {
         return topicService.getRepoCountByTopic();
     }
 
