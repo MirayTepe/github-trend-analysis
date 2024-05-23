@@ -13,8 +13,8 @@ Bu proje, modern Java teknolojileri kullanılarak geliştirilmiş bir uygulamad�
 ![Proje](./images/AllNodeAndRelationship.png)
 ![Proje](./images/AllNodeAndRelationship2.png)
 ![Proje](./images/GithubRepoNode.png)
-![Proje](./images/HAS_LİCENSE relationship.png)
-![Proje](./images/HAS_TOPIC relationship.png)
+![Proje](./images/HAS_LİCENSERelationship.png)
+![Proje](./images/HAS_TOPICRelationship.png)
 ![Proje](./images/LanguageNode.png)
 ![Proje](./images/LicenseNode.png)
 
