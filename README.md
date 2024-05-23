@@ -17,4 +17,5 @@ Bu proje, modern Java teknolojileri kullanılarak geliştirilmiş bir uygulamad�
 ![Proje](./images/HAS_TOPICRelationship.png)
 ![Proje](./images/LanguageNode.png)
 ![Proje](./images/LicenseNode.png)
+![Proje](./images/OWNED_BYRelationship.png)
 
