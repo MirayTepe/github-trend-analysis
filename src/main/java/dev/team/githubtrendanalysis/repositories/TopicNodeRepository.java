@@ -9,12 +9,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
+
 @Repository
-public interface TopicRepository extends Neo4jRepository<TopicNode, Long> {
-    @Query("MATCH (repo:GithubRepo)-[:HAS_TOPIC]->(topic:TopicNode) " +
-            "RETURN topic.name AS topic, COUNT(repo) AS repoCount " +
-            "ORDER BY repoCount DESC")
+public interface TopicNodeRepository extends Neo4jRepository<TopicNode, Long> {
+    @Query("MATCH (repo:GithubRepo)-[:HAS_TOPIC]->(topic:TopicNode) RETURN topic.topic AS topic, COUNT(repo) AS repoCount DESC")
     List<TopicRepoCount> countReposByTopic();
 
     @Query("MATCH (repo:GithubRepo)-[:HAS_TOPIC]->(topic:TopicNode {topic: $topic}) RETURN repo")

@@ -11,6 +11,10 @@ public class LicenseService {
     @Autowired
     private LicenseRepository licenseRepository;
 
+    public LicenseService(LicenseRepository licenseRepository) {
+        this.licenseRepository = licenseRepository;
+    }
+
     public License getLicenseByName(String name) {
         return licenseRepository.findByName(name);
     }

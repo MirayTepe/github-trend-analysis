@@ -5,18 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.neo4j.ogm.annotation.Index;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Property;
-import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Node
+@Node("GithubRepo")
 public class GithubRepo {
 
     @Id
@@ -27,8 +24,7 @@ public class GithubRepo {
 
     private String name;
 
-    @Property(name = "full_name")
-    private String fullName;
+    private String full_name;
 
     @Property(name = "private")
     private Boolean isPrivate;
@@ -51,8 +47,8 @@ public class GithubRepo {
 
     private Integer size;
 
-    @Property(name = "stargazers_count")
-    private Integer stargazersCount;
+
+    private Integer stargazers_count;
 
     private Integer watchers_count;
 
@@ -71,8 +67,7 @@ public class GithubRepo {
 
     private Boolean has_discussions;
 
-    @Property(name = "forks_count")
-    private Integer forksCount;
+    private Integer forks_count;
 
     private Boolean archived;
 

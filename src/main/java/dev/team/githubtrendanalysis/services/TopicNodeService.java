@@ -2,8 +2,7 @@ package dev.team.githubtrendanalysis.services;
 
 import dev.team.githubtrendanalysis.models.GithubRepo;
 import dev.team.githubtrendanalysis.models.TopicRepoCount;
-import dev.team.githubtrendanalysis.repositories.LicenseRepository;
-import dev.team.githubtrendanalysis.repositories.TopicRepository;
+import dev.team.githubtrendanalysis.repositories.TopicNodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Service
-public class TopicService {
+public class TopicNodeService {
 
     @Autowired
-    private TopicRepository topicRepository;
-
-    public TopicService(TopicRepository topicRepository) {
-        this.topicRepository = topicRepository;
-    }
+    private TopicNodeRepository topicRepository;
 
     public Map<String, Long> getRepoCountByTopic() {
         List<TopicRepoCount> topicDataList = topicRepository.countReposByTopic();

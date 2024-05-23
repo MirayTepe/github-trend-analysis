@@ -1,30 +1,24 @@
 package dev.team.githubtrendanalysis.models;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.neo4j.ogm.annotation.Index;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.neo4j.ogm.annotation.Index;
-import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
-@Node
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class TopicNode {
-
     @Id
+    @GeneratedValue
     @Index(unique = true)
+    private Long id;
     private String topic;
-
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
+    public TopicNode(String topic) {
         this.topic = topic;
     }
 }

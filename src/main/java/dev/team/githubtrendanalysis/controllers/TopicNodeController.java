@@ -1,8 +1,7 @@
 package dev.team.githubtrendanalysis.controllers;
 
 import dev.team.githubtrendanalysis.models.GithubRepo;
-import dev.team.githubtrendanalysis.repositories.TopicRepository;
-import dev.team.githubtrendanalysis.services.TopicService;
+import dev.team.githubtrendanalysis.services.TopicNodeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,13 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+
 @RestController
-@RequestMapping("/api/topic")
-public class TopicController {
+@RequestMapping("/api/v1")
+public class TopicNodeController {
 
-    private TopicService topicService;
+    private TopicNodeService topicService;
 
-    public TopicController(TopicService topicService) {
+    public TopicNodeController(TopicNodeService topicService) {
         this.topicService = topicService;
     }
 
