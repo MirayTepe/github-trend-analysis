@@ -11,7 +11,7 @@ Bu proje, modern Java teknolojileri kullanılarak geliştirilmiş bir uygulamad�
 Aşağıda proje ile ilgili bazı görseller bulunmaktadır:
 
 ### All Node
-`![Proje](./images/AllNode.png)`
+![Proje](./images/AllNode.png)
 
 ### All Node and Relationship
 ![Proje](./images/AllNodeAndRelationship.png)
