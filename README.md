@@ -78,6 +78,9 @@ Proje, modülerliği ve sürdürülebilirliği sağlamak amacıyla katmanlı bir
 2. **Services** katmanı, iş mantığını işler, GitHub API ile etkileşime geçer ve **Neo4j veritabanı** ile veri alışverişi yapar.
 3. **Repositories** arayüzü, `Neo4jRepository`'yi genişleterek veritabanı ile etkileşim kurar ve veriyi hızlı bir şekilde saklar veya sorgular.
 4. **QueryResults** sınıfları, özel Neo4j sorgularının sonuçlarını yakalar ve kontrolcüler üzerinden istemcilere döner.
+## Proje Sonuçları
+![Konu ve Repo Arasındaki İlişki (HAS_TOPIC)](src/images/HAS_TOPICRelationship.png)
+![Lisans ve Repo Arasındaki İlişki (HAS_LICENSE)](src/images/HAS_LİCENSERelationship.png)
 
 ## Projeyi Yapanlar
 - **Miray Tepe**
