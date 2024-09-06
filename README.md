@@ -80,8 +80,8 @@ Proje, modülerliği ve sürdürülebilirliği sağlamak amacıyla katmanlı bir
 4. **QueryResults** sınıfları, özel Neo4j sorgularının sonuçlarını yakalar ve kontrolcüler üzerinden istemcilere döner.
 
 ## Projeyi Yapanlar
--**Miray Tepe**
--**Meryem Zeynep Altunal**
--**Esra Altınay**
+- **Miray Tepe**
+- **Meryem Zeynep Altunal**
+- **Esra Altınay**
 
 
