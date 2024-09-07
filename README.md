@@ -88,6 +88,6 @@ Proje, modülerliği ve sürdürülebilirliği sağlamak amacıyla katmanlı bir
 ## Projeyi Yapanlar
 - **Miray Tepe**
 - **Meryem Zeynep Altunal**
-- **Esra Altınay**
+- **Esranur Altınay**
 
 
